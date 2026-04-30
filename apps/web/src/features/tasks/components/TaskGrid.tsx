@@ -2,7 +2,8 @@ import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@workspace/ui/components/card';
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@workspace/ui/components/select';
 import { Input } from '@workspace/ui/components/input';
-import type { Task, TaskStatus } from '@/types/task';
+import type { Task, TaskStatus } from '@/features/tasks/types/task';
+import { TaskActions } from './TaskActions';
 
 interface TaskGridProps {
   tasks: Task[];
@@ -33,9 +34,12 @@ export function TaskGrid({ tasks, onTaskClick, onStatusChange }: TaskGridProps) 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {filteredTasks.length > 0 ? (
           filteredTasks.map(task => (
-            <Card key={task.id} className="cursor-pointer hover:shadow-md transition-shadow" onClick={() => onTaskClick(task)}>
-              <CardHeader>
+            <Card key={task.id} className="cursor-pointer hover:shadow-md transition-shadow relative" onClick={() => onTaskClick(task)}>
+              <CardHeader className="pr-12">
                 <CardTitle>{task.title}</CardTitle>
+                <div className="absolute top-4 right-4">
+                  <TaskActions task={task} onEdit={onTaskClick} />
+                </div>
               </CardHeader>
               <CardContent className="flex flex-col gap-4">
                 <p className="text-sm text-gray-500 line-clamp-2">{task.description}</p>

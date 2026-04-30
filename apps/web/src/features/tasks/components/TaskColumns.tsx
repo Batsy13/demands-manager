@@ -1,9 +1,10 @@
-import { useTaskMutations } from "@/hooks/use-task"
-import type { Task, TaskStatus } from "@/types/task"
+import { useTaskMutations } from "@/features/tasks/hooks/use-task"
+import type { Task, TaskStatus } from "@/features/tasks/types/task"
 import type { ColumnDef } from "@tanstack/react-table"
 import { Button } from "@workspace/ui/components/button"
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@workspace/ui/components/select"
 import { ArrowUpDown } from "lucide-react"
+import { TaskActions } from "./TaskActions"
 
 const StatusCell = ({ task }: { task: Task }) => {
   const { update } = useTaskMutations()
@@ -28,15 +29,12 @@ const StatusCell = ({ task }: { task: Task }) => {
   )
 }
 
-export const columns: ColumnDef<Task>[] = [
+export const getColumns = (onEdit: (task: Task) => void): ColumnDef<Task>[] => [
   {
     accessorKey: "title",
     header: ({ column }) => {
       return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
+        <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
           Título
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
@@ -51,10 +49,7 @@ export const columns: ColumnDef<Task>[] = [
     accessorKey: "assignee",
     header: ({ column }) => {
       return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
+        <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
           Responsável
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
@@ -65,10 +60,7 @@ export const columns: ColumnDef<Task>[] = [
     accessorKey: "createdAt",
     header: ({ column }) => {
       return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
+        <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
           Data de Abertura
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
@@ -82,5 +74,9 @@ export const columns: ColumnDef<Task>[] = [
     accessorKey: "status",
     header: "Status",
     cell: ({ row }) => <StatusCell task={row.original} />
+  },
+  {
+    id: "actions",
+    cell: ({ row }) => <TaskActions task={row.original} onEdit={onEdit} />,
   },
 ]

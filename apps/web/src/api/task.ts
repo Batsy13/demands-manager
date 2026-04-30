@@ -1,4 +1,4 @@
-import type { Task } from '@/types/task';
+import type { Task } from '@/features/tasks/types/task';
 import axios from 'axios';
 
 const API_URL = `${import.meta.env.VITE_API_URL}/tasks`;
@@ -16,4 +16,8 @@ export const saveTask = async (task: Omit<Task, 'id'>): Promise<Task> => {
 export const editTask = async (task: Task): Promise<Task> => {
   const response = await axios.put<Task>(`${API_URL}/${task.id}`, task);
   return response.data;
+};
+
+export const deleteTask = async (id: string): Promise<void> => {
+  await axios.delete(`${API_URL}/${id}`);
 };

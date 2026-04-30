@@ -1,16 +1,17 @@
 import { LayoutGrid, List, Moon, Sun } from 'lucide-react';
-import { TaskDialog } from '@/components/TaskDialog';
-import { columns } from '@/components/tasks/columns';
-import { DataTable } from '@/components/tasks/data-table';
+import { TaskDialog } from '@/features/tasks/components/TaskDialog';
 import { Button } from '@workspace/ui/components/button';
-import { useDemands } from '@/hooks/use-demands';
 import { Switch } from '@workspace/ui/components/switch';
-import { TaskGrid } from '@/components/TaskGrid';
+import { useDemands } from '@/features/tasks/hooks/use-demands';
+import { TaskGrid } from '@/features/tasks/components/TaskGrid';
+import { DataTable } from '@/features/tasks/components/data-table';
+import { getColumns } from '@/features/tasks/components/TaskColumns';
 
 export function Demands() {
   const {
     tasks,
     isLoading,
+    isError,
     view,
     setView,
     selectedTask,
@@ -24,6 +25,8 @@ export function Demands() {
 
   if (isLoading) return <div className="flex h-screen items-center justify-center">Carregando...</div>;
 
+  if (isError) return <div className="flex h-screen items-center justify-center text-red-500 font-semibold text-xl">Erro ao carregar as demandas. Verifique se o servidor está ativo.</div>;
+
   if (!tasks || tasks.length === 0) {
     return (
       <div className="flex flex-col h-screen items-center justify-center gap-4">
@@ -35,7 +38,7 @@ export function Demands() {
   }
 
   return (
-    <div className="p-8 max-w-6xl mx-auto flex flex-col gap-6">
+    <div className="p-4 md:p-8 max-w-6xl mx-auto flex flex-col gap-6">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <h1 className="text-3xl font-bold">Demandas</h1>
         
@@ -57,13 +60,13 @@ export function Demands() {
       </div>
 
       {view === 'grid' ? (
-        <TaskGrid
-          tasks={tasks}
-          onTaskClick={openDialog}
-          onStatusChange={handleStatusChange}
+        <TaskGrid 
+          tasks={tasks} 
+          onTaskClick={openDialog} 
+          onStatusChange={handleStatusChange} 
         />
       ) : (
-        <DataTable columns={columns} data={tasks} onRowClick={openDialog} />
+        <DataTable columns={getColumns(openDialog)} data={tasks} onRowClick={openDialog} />
       )}
       <TaskDialog task={selectedTask} isOpen={isDialogOpen} onClose={closeDialog} />
     </div>

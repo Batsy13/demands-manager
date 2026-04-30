@@ -1,5 +1,5 @@
-import { useTaskForm } from '@/hooks/use-task-form';
-import type { Task } from '@/types/task';
+import { useTaskForm } from '@/features/tasks/hooks/use-task-form';
+import type { Task } from '@/features/tasks/types/task';
 import { Button } from '@workspace/ui/components/button';
 import { Calendar } from '@workspace/ui/components/calendar';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@workspace/ui/components/dialog';
@@ -30,15 +30,15 @@ export function TaskDialog({ task, isOpen, onClose }: Props) {
         </DialogHeader>
         <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
           <div>
-            <Input placeholder="Título" {...register('title')} />
+            <Input placeholder="Título" maxLength={40} {...register('title')} />
             {errors.title && <span className="text-red-500 text-xs">{errors.title.message}</span>}
           </div>
           <div>
-            <Input placeholder="Descrição" {...register('description')} />
+            <Input placeholder="Descrição" maxLength={200} {...register('description')} />
             {errors.description && <span className="text-red-500 text-xs">{errors.description.message}</span>}
           </div>
           <div>
-            <Input placeholder="Responsável" {...register('assignee')} />
+            <Input placeholder="Responsável" maxLength={20} {...register('assignee')} />
             {errors.assignee && <span className="text-red-500 text-xs">{errors.assignee.message}</span>}
           </div>
           

@@ -1,22 +1,21 @@
-import { useState, useEffect } from 'react';
-import { useTasks, useTaskMutations } from '@/hooks/use-task';
-import type { Task, TaskStatus } from '@/types/task';
+import { useState } from 'react';
+import { useTasks, useTaskMutations } from '@/features/tasks/hooks/use-task';
+import type { Task, TaskStatus } from '@/features/tasks/types/task';
+import { useTheme } from '@/theme-provider';
 
 export function useDemands() {
-  const { data: tasks, isLoading } = useTasks();
+  const { data: tasks, isLoading, isError } = useTasks();
   const { update } = useTaskMutations();
   const [view, setView] = useState<'list' | 'grid'>('list');
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [isDarkMode, setIsDarkMode] = useState(false);
 
-  useEffect(() => {
-    setIsDarkMode(document.documentElement.classList.contains('dark'));
-  }, []);
+  const { theme, setTheme } = useTheme();
+  
+  const isDarkMode = theme === 'dark';
 
   const toggleTheme = () => {
-    document.documentElement.classList.toggle('dark');
-    setIsDarkMode(prev => !prev);
+    setTheme(theme === 'dark' ? 'light' : 'dark');
   };
 
   const handleStatusChange = (task: Task, newStatus: TaskStatus) => {
@@ -33,6 +32,7 @@ export function useDemands() {
   return {
     tasks,
     isLoading,
+    isError,
     view,
     setView,
     selectedTask,
